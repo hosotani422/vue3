@@ -1,0 +1,9 @@
+{
+  "hosting": {
+    "public": "bundle",
+    "ignore": [
+      "firebase.json",
+      "**/.*"
+    ]
+  }
+}

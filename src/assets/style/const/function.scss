@@ -1,0 +1,15 @@
+@function zindex($key) {
+  @return map-get((
+    loading: 90,
+    notice: 80,
+    dialog: 70,
+    picker: 60,
+    page: 10,
+  ), $key);
+}
+@function gradient($color: #fff, $angle: 0deg, $rate: 0%) {
+  @return linear-gradient($angle, $color, scale-color($color, $lightness: $rate));
+}
+@function rem($pexel: 16, $base: 16) {
+  @return $pexel / $base * 1rem;
+}
