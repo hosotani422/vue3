@@ -1,0 +1,106 @@
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+@mixin ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+@mixin replace($before: "", $after: "") {
+  @at-root {
+    #{selector-replace(&, $before, $after)} {
+      @content;
+    }
+  }
+}
+@mixin device($type) {
+  $devices: (tb: 800, sp: 600);
+  @media only screen and (max-width: #{map-get($devices, $type)}px) {
+    @content;
+  }
+}
+@mixin link($default, $visited, $focus, $hover, $active) {
+  a {
+    color: $default;
+    &:visited {
+      color: $visited;
+    }
+    &:focus {
+      color: $focus;
+    }
+    &:hover {
+      color: $hover;
+      text-decoration: underline;
+    }
+    &:active {
+      color: $active;
+    }
+  }
+}
+@mixin state($type) {
+  $states: (
+    fine: $color-state-fine,
+    warn: $color-state-warn,
+    error: $color-state-error);
+  @each $key, $value in $states {
+    &.#{$key} {
+      #{$type}: $value !important;
+    }
+  }
+}
+@mixin box($display: block, $margin: null, $padding: null, $width: null, $height: null) {
+  display: $display;
+  margin: $margin;
+  padding: $padding;
+  width: $width;
+  height: $height;
+}
+@mixin flex($display: flex, $direction: null,
+$align1: null, $align2: null, $align3: null, $wrap: null) {
+  display: $display;
+  flex-direction: $direction;
+  align-items: $align1;
+  justify-content: $align2;
+  align-content: $align3;
+  flex-wrap: $wrap;
+}
+@mixin position($position: static, $index: null,
+$top: null, $right: null, $bottom: null, $left: null) {
+  position: $position;
+  z-index: $index;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
+@mixin transition($name: null, $property: null, $duration: null, $timing: null, $delay: null) {
+  $durations: (speed1: $duration, speed2: calc($duration / 2), speed3: calc($duration / 4));
+  @if ($name) {
+    &.#{$name}-enter-active, &.#{$name}-leave-active {
+      transition-property: $property;
+      transition-timing-function: $timing;
+      transition-delay: $delay;
+      @each $key, $value in $durations {
+        .#{$key} & {
+          transition-duration: $value;
+        }
+      }
+    }
+    &.#{$name}-enter-from, &.#{$name}-leave-to {
+      @content;
+    }
+  } @else {
+    transition-property: $property;
+    transition-timing-function: $timing;
+    transition-delay: $delay;
+    @each $key, $value in $durations {
+      .#{$key} & {
+        transition-duration: $value;
+      }
+    }
+  }
+}

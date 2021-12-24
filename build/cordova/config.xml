@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="jp.memotea"
+  version="2.0.8" android-versionCode="200088"
+  xmlns="http://www.w3.org/ns/widgets"
+  xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>Memotea</name>
+  <description>
+    メモやタスクの管理をいつでもどこでも！
+    以下の特徴があります。
+    ・シンプルだから全ての機能をすぐに使いこなせます
+    ・直感的なので快適な操作感で利用できます
+  </description>
+  <author email="develop0422@gmail.com" href="https://memotea-b201e.firebaseapp.com">develop0422</author>
+  <content src="index.html" />
+  <preference name="android-targetSdkVersion" value="31" />
+  <preference name="AutoHideSplashScreen" value="false" />
+  <preference name="ShowSplashScreenSpinner" value="false" />
+</widget>
