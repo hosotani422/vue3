@@ -1,95 +1,67 @@
 <script lang='ts'>
 import * as Vue from 'vue';
-import * as Vuex from 'vuex';
+import * as Util from '@/assets/script/base/util';
 import * as Lang from '@/assets/script/lang/lang';
+import * as page from '@/composition/pages/page';
 export default Vue.defineComponent({
-  computed: {
-    ...Vuex.mapState([
-      `route`,
-    ]),
-    ...Vuex.mapState(`pages`, [
-      `page`,
-    ]),
-    ...Vuex.mapGetters(`pages/page`, [
-      `classItemMain`,
-      `textCountMain`,
-    ]),
-    listId() {
-      return this.page.listId;
-    },
-    list() {
-      return this.page.list.data[this.listId];
-    },
-    lang() {
-      return Lang[this.page.conf.lang as `jp` | `en`];
-    },
-  },
-  methods: {
-    ...Vuex.mapActions(`pages/page`, [
-      `saveList`,
-      `routerList`,
-      `routerSub`,
-      `routerConf`,
-      `insertItemMain`,
-      `deleteItemMain`,
-      `checkItemMain`,
-      `copyItemMain`,
-      `moveItemMain`,
-      `switchEditMain`,
-      `dragInitMain`,
-      `dragStartMain`,
-      `dragMoveMain`,
-      `dragEndMain`,
-    ]),
-    ...Vuex.mapMutations(`pages/page`, [
-      `generic`,
-    ]),
+  setup: () => {
+    Vue.watch(
+      () => Util.copy(page.state.list),
+      () => {
+        page.action.saveList();
+      },
+    );
+    return {
+      ...page,
+      listId: Vue.computed(() => page.state.listId),
+      list: Vue.computed(() => page.state.list.data[page.state.listId]),
+      lang: Vue.computed(() => Lang[page.state.conf.lang as `jp` | `en`]),
+    };
   },
 });
 </script>
 
 <template lang='html'>
-<div>
-  <div class="page-main" @click="switchEditMain()" @touchmove="dragStartMain({$event}),
-    dragMoveMain({y:$event.changedTouches[0].clientY,$event})" @touchend="dragEndMain()">
-    <h2 class="head">
-      <svg class="list" @click="routerList()">
-        <use href="@/assets/image/icon.svg#list"/>
-      </svg>
-      <FormTextbox class="title" :placeholder="lang.page.list" :value="list.title"
-        @input="generic([`list`,`data`,listId,`title`,$event.target.value]),saveList()"/>
-      <svg class="conf" @click="routerConf()">
-        <use href="@/assets/image/icon.svg#conf"/>
-      </svg>
-      <svg class="plus" @click="insertItemMain()">
-        <use href="@/assets/image/icon.svg#plus"/>
-      </svg>
-    </h2>
-    <div class="body">
-      <transition-group appear class="wrap" tag="ul" name="slide">
-        <li class="item-main" :class="[classItemMain(mainId)]" :data-id="mainId"
-          :key="`list${listId}main${mainId}`" v-for="mainId of list.sort" @contextmenu.prevent
-          @lngclick="switchEditMain({mainId}),dragInitMain({mainId,y:$event.detail.clientY})">
-          <FormCheckbox class="check" :checked="list.data[mainId].check"
-            @change="checkItemMain({mainId,checked:$event.target.checked})"></FormCheckbox>
-          <p class="title" @click="list.data[mainId].status!==`edit`&&routerSub({mainId})">
-            {{list.data[mainId].title}}
-          </p>
-          <div class="count" @click="list.data[mainId].status!==`edit`&&routerSub({mainId})">
-            {{textCountMain(mainId)}}
-          </div>
-          <svg class="clone" @click="copyItemMain({$event,mainId})">
-            <use class="clone" href="@/assets/image/icon.svg#clone"/>
-          </svg>
-          <svg class="move" @click="moveItemMain({$event,mainId})">
-            <use class="move" href="@/assets/image/icon.svg#move"/>
-          </svg>
-          <svg class="trash" @click="deleteItemMain({$event,mainId})">
-            <use class="trash" href="@/assets/image/icon.svg#trash"/>
-          </svg>
-        </li>
-      </transition-group>
-    </div>
+<div class="page-main" @touchmove="action.dragStartMain({$event}),
+  action.dragMoveMain({y:$event.changedTouches[0].clientY,$event})"
+  @touchend="action.dragEndMain()" @click="action.switchEditMain()">
+  <h2 class="head">
+    <svg class="list" @click="action.routerList()">
+      <use href="@/assets/image/icon.svg#list"/>
+    </svg>
+    <FormTextbox class="title" :placeholder="lang.page.list" v-model="list.title"/>
+    <svg class="conf" @click="action.routerConf()">
+      <use href="@/assets/image/icon.svg#conf"/>
+    </svg>
+    <svg class="plus" @click="action.insertItemMain()">
+      <use href="@/assets/image/icon.svg#plus"/>
+    </svg>
+  </h2>
+  <div class="body">
+    <transition-group appear class="wrap" tag="ul" name="slide">
+      <li class="item-main" :class="[getter.classItemMain.value(mainId)]" :data-id="mainId"
+        :key="`list${listId}main${mainId}`" v-for="mainId of list.sort" @contextmenu.prevent
+        @lngclick="action.switchEditMain({mainId}),
+        action.dragInitMain({mainId,y:$event.detail.clientY})">
+        <FormCheckbox class="check" :modelValue="list.data[mainId].check"
+          @change="action.checkItemMain({mainId,checked:$event.target.checked})"></FormCheckbox>
+        <p class="title" @click="list.data[mainId].status!==`edit`&&action.routerSub({mainId})">
+          {{list.data[mainId].title}}
+        </p>
+        <div class="count" @click="list.data[mainId].status!==`edit`&&action.routerSub({mainId})">
+          {{getter.textCountMain.value(mainId)}}
+        </div>
+        <svg class="clone" @click="action.copyItemMain({$event,mainId})">
+          <use class="clone" href="@/assets/image/icon.svg#clone"/>
+        </svg>
+        <svg class="move" @click="action.moveItemMain({$event,mainId})">
+          <use class="move" href="@/assets/image/icon.svg#move"/>
+        </svg>
+        <svg class="trash" @click="action.deleteItemMain({$event,mainId})">
+          <use class="trash" href="@/assets/image/icon.svg#trash"/>
+        </svg>
+      </li>
+    </transition-group>
   </div>
 </div>
 </template>

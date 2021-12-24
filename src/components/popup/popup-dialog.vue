@@ -1,63 +1,43 @@
 <script lang='ts'>
 import * as Vue from 'vue';
-import * as Vuex from 'vuex';
 import * as Lang from '@/assets/script/lang/lang';
+import * as page from '@/composition/pages/page';
+import * as dialog from '@/composition/popup/dialog';
 export default Vue.defineComponent({
-  computed: {
-    ...Vuex.mapState(`pages`, [
-      `page`,
-    ]),
-    ...Vuex.mapState(`popup`, [
-      `dialog`,
-    ]),
-    ...Vuex.mapGetters(`popup/dialog`, [
-      `stateCheckAll`,
-    ]),
-    lang() {
-      return Lang[this.page.conf.lang as `jp` | `en`];
-    },
-  },
-  methods: {
-    ...Vuex.mapActions(`popup/dialog`, [
-      `clickCheckAll`,
-    ]),
-    ...Vuex.mapMutations(`popup/dialog`, [
-      `generic`,
-    ]),
-  },
+  setup: () => ({
+    ...dialog,
+    lang: Vue.computed(() => Lang[page.state.conf.lang as `jp` | `en`]),
+  }),
 });
 </script>
 
 <template lang='html'>
 <transition name="fade">
-  <div class="popup-dialog" v-if="dialog.open">
+  <div class="popup-dialog" v-if="state.open">
     <div class="home">
-      <h4 class="head" v-if="dialog.title">{{dialog.title}}</h4>
+      <h4 class="head" v-if="state.title">{{state.title}}</h4>
       <div class="body">
-        <p class="label" v-if="dialog.message">{{dialog.message}}</p>
-        <FormTextbox class="text" :placeholder="dialog.text.placeholder"
-          :value="dialog.text.value" v-focus v-if="dialog.mode===`text`"
-          @input="generic([`text`,`value`,$event.target.value])"></FormTextbox>
-        <FormCheckbox class="check" :checked="stateCheckAll()"
-          @change="clickCheckAll({checked:$event.target.checked})"
-          v-if="dialog.mode===`check`&&dialog.check.all">{{lang.dialog.selectAll}}</FormCheckbox>
-        <FormCheckbox class="check" :checked="dialog.check.data[id].check"
-          @change="generic([`check`,`data`,id,`check`,$event.target.checked])"
-          :key="`check${id}`" v-for="id of dialog.check.sort"
-          v-if="dialog.mode===`check`">{{dialog.check.data[id].title}}</FormCheckbox>
-        <FormRadiobox class="radio" name="radio" v-if="dialog.mode===`radio`&&dialog.radio.none"
-          @change="generic([`radio`,`select`,$event.target.value]),dialog.ok.callback()">
-          {{lang.dialog.selectNone}}</FormRadiobox>
-        <FormRadiobox class="radio" name="radio" :value="id" :checked="dialog.radio.select===id"
-          v-if="dialog.mode===`radio`" :key="`radio${id}`" v-for="id of dialog.radio.sort"
-          @change="generic([`radio`,`select`,$event.target.value]),dialog.ok.callback()">
-          {{dialog.radio.data[id].title}}</FormRadiobox>
+        <p class="label" v-if="state.message">{{state.message}}</p>
+        <FormTextbox class="text" :placeholder="state.text.placeholder"
+          v-model="state.text.value" v-focus v-if="state.mode===`text`"></FormTextbox>
+        <FormCheckbox class="check" :modelValue="getter.stateCheckAll.value()"
+          @change="action.clickCheckAll({checked:$event.target.checked})"
+          v-if="state.mode===`check`&&state.check.all">{{lang.dialog.selectAll}}</FormCheckbox>
+        <FormCheckbox class="check" v-model="state.check.data[id].check"
+          :key="`check${id}`" v-for="id of state.check.sort"
+          v-if="state.mode===`check`">{{state.check.data[id].title}}</FormCheckbox>
+        <FormRadiobox class="radio" name="radio" value="" v-model="state.radio.select"
+          v-if="state.mode===`radio`&&state.radio.none">
+          {{lang.state.selectNone}}</FormRadiobox>
+        <FormRadiobox class="radio" name="radio" :value="id" v-model="state.radio.select"
+          v-if="state.mode===`radio`" :key="`radio${id}`" v-for="id of state.radio.sort">
+          {{state.radio.data[id].title}}</FormRadiobox>
       </div>
       <div class="foot">
         <FormButton class="cancel"
-          @click="dialog.cancel.callback()">{{dialog.cancel.name}}</FormButton>
-        <FormButton class="ok" @click="dialog.ok.callback()"
-          v-if="dialog.mode!==`radio`&&dialog.mode!==`alert`">{{dialog.ok.name}}</FormButton>
+          @click="state.cancel.callback()">{{state.cancel.name}}</FormButton>
+        <FormButton class="ok" @click="state.ok.callback()"
+          v-if="state.mode!==`alert`">{{state.ok.name}}</FormButton>
       </div>
     </div>
   </div>

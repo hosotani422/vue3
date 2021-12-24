@@ -2,7 +2,7 @@ export const common = {
   cancel: `キャンセル`,
   clear: `クリア`,
   ok: `決定`,
-} as const;
+};
 
 export const page = {
   list: `リスト`,
@@ -12,7 +12,7 @@ export const page = {
   date: `日付`,
   time: `時刻`,
   alarm: `アラーム`,
-} as const;
+};
 
 export const dialog = {
   selectAll: `全選択`,
@@ -42,16 +42,16 @@ export const dialog = {
       "12": {label: `2日前`, value: 2880},
     },
   },
-} as const;
+};
 
 export const date = {
   week: [`日`, `月`, `火`, `水`, `木`, `金`, `土`],
-} as const;
+};
 
 export const notice = {
   message: `削除が完了しました`,
   button: `元に戻す`,
-} as const;
+};
 
 export const conf = {
   title: `設定`,
@@ -108,8 +108,8 @@ export const conf = {
   about: {
     title: `概要`,
   },
-} as const;
+};
 
 export const alarm = {
   title: `Memotea アラーム`,
-} as const;
+};

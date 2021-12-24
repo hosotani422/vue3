@@ -2,11 +2,19 @@
 import * as Vue from 'vue';
 export default Vue.defineComponent({
   inheritAttrs: false,
+  props: {
+    modelValue: {
+      type: String,
+      default: ``,
+    },
+  },
+  emits: [`update:modelValue`],
 });
 </script>
 
 <template lang='html'>
-<input type="text" class="form-text" v-bind="$attrs"/>
+<input type="text" class="form-text" v-bind="$attrs" :value="modelValue"
+  @input="$emit(`update:modelValue`, $event.target.value)"/>
 </template>
 
 <style lang='scss' scoped>

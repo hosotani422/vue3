@@ -2,11 +2,19 @@
 import * as Vue from 'vue';
 export default Vue.defineComponent({
   inheritAttrs: false,
+  props: {
+    modelValue: {
+      type: String,
+      default: ``,
+    },
+  },
+  emits: [`update:modelValue`],
 });
 </script>
 
 <template lang='html'>
-<textarea class="form-textarea" v-bind="$attrs">{{$attrs.value}}</textarea>
+<textarea class="form-textarea" v-bind="$attrs"
+  @input="$emit(`update:modelValue`, $event.target.value)">{{modelValue}}</textarea>
 </template>
 
 <style lang='scss' scoped>

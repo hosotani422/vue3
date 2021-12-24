@@ -1,50 +1,36 @@
 <script lang='ts'>
 import * as Vue from 'vue';
-import * as Vuex from 'vuex';
+import * as Util from '@/assets/script/base/util';
 import * as Const from '@/assets/script/const/const';
 import * as Lang from '@/assets/script/lang/lang';
+import * as page from '@/composition/pages/page';
 export default Vue.defineComponent({
-  computed: {
-    ...Vuex.mapState(`pages`, [
-      `page`,
-    ]),
-    Const() {
-      return Const;
-    },
-    lang() {
-      return Lang[this.page.conf.lang as `jp` | `en`];
-    },
-  },
-  methods: {
-    ...Vuex.mapActions(`pages/page`, [
-      `saveConf`,
-      `routerBack`,
-      `downloadBackupConf`,
-      `uploadBackupConf`,
-      `resetConfConf`,
-      `resetListConf`,
-      `swipeInitConf`,
-      `swipeStartConf`,
-      `swipeMoveConf`,
-      `swipeEndConf`,
-    ]),
-    ...Vuex.mapMutations(`pages/page`, [
-      `generic`,
-    ]),
+  setup: () => {
+    Vue.watch(
+      () => Util.copy(page.state.conf),
+      () => {
+        page.action.saveConf();
+      },
+    );
+    return {
+      ...page,
+      Const,
+      lang: Vue.computed(() => Lang[page.state.conf.lang as `jp` | `en`]),
+    };
   },
 });
 </script>
 
 <template lang='html'>
 <div class="page-conf"
-  @touchstart.self="swipeInitConf({target:$event.currentTarget,
+  @touchstart.self="action.swipeInitConf({target:$event.currentTarget,
     x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})" @touchmove="
-    swipeStartConf({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY}),
-    swipeMoveConf({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})"
-  @touchend="swipeEndConf({y:$event.changedTouches[0].clientY})">
+    action.swipeStartConf({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY}),
+    action.swipeMoveConf({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})"
+  @touchend="action.swipeEndConf({y:$event.changedTouches[0].clientY})">
   <div class="home">
     <div class="head">
-      <svg class="down" @click="routerBack()">
+      <svg class="down" @click="action.routerBack()">
         <use href="@/assets/image/icon.svg#down"/>
       </svg>
       <h2 class="title">{{lang.conf.title}}</h2>
@@ -53,61 +39,56 @@ export default Vue.defineComponent({
     <ul class="body">
       <li class="item">
         <h3 class="title">{{lang.conf.size.title}}</h3>
-        <FormRange class="value" min="1" max="3" step="1" :value="page.conf.size"
-          @input="generic([`conf`,`size`,$event.target.value]),saveConf()"></FormRange>
-        <p class="label">{{lang.conf.size.value[page.conf.size]}}</p>
+        <FormRange class="value" min="1" max="3" step="1" v-model="state.conf.size"></FormRange>
+        <p class="label">{{lang.conf.size.value[state.conf.size]}}</p>
       </li>
       <li class="item">
         <h3 class="title">{{lang.conf.speed.title}}</h3>
-        <FormRange class="value" min="1" max="3" step="1" :value="page.conf.speed"
-          @input="generic([`conf`,`speed`,$event.target.value]),saveConf()"></FormRange>
-        <p class="label">{{lang.conf.speed.value[page.conf.speed]}}</p>
+        <FormRange class="value" min="1" max="3" step="1" v-model="state.conf.speed"></FormRange>
+        <p class="label">{{lang.conf.speed.value[state.conf.speed]}}</p>
       </li>
       <li class="item">
         <h3 class="title">{{lang.conf.volume.title}}</h3>
-        <FormRange class="value" min="0" max="3" step="1" :value="page.conf.volume"
-          @input="generic([`conf`,`volume`,$event.target.value]),saveConf()"></FormRange>
-        <p class="label">{{lang.conf.volume.value[page.conf.volume]}}</p>
+        <FormRange class="value" min="0" max="3" step="1" v-model="state.conf.volume"></FormRange>
+        <p class="label">{{lang.conf.volume.value[state.conf.volume]}}</p>
       </li>
       <li class="item">
         <h3 class="title">{{lang.conf.vibrate.title}}</h3>
-        <FormRadiobox class="value" name="vibrate" :checked="!page.conf.vibrate"
-          @change="generic([`conf`,`vibrate`,false]),saveConf()">
+        <FormRadiobox class="value" name="vibrate" value="false" v-model="state.conf.vibrate">
           {{lang.conf.vibrate.off}}</FormRadiobox>
-        <FormRadiobox class="value" name="vibrate" :checked="page.conf.vibrate"
-          @change="generic([`conf`,`vibrate`,true]),saveConf()">
+        <FormRadiobox class="value" name="vibrate" value="true" v-model="state.conf.vibrate">
           {{lang.conf.vibrate.on}}</FormRadiobox>
       </li>
       <li class="item">
         <h3 class="title">{{lang.conf.theme.title}}</h3>
-        <FormRadiobox class="value" name="theme" :checked="page.conf.theme===`light`"
-          @change="generic([`conf`,`theme`,`light`]),saveConf()">
+        <FormRadiobox class="value" name="theme" value="light" v-model="state.conf.theme">
           {{lang.conf.theme.light}}</FormRadiobox>
-        <FormRadiobox class="value" name="theme" :checked="page.conf.theme===`dark`"
-          @change="generic([`conf`,`theme`,`dark`]),saveConf()">
+        <FormRadiobox class="value" name="theme" value="dark" v-model="state.conf.theme">
           {{lang.conf.theme.dark}}</FormRadiobox>
       </li>
       <li class="item">
         <h3 class="title">{{lang.conf.lang.title}}</h3>
-        <FormRadiobox class="value" name="lang" :checked="page.conf.lang===`en`"
-          @change="generic([`conf`,`lang`,`en`]),saveConf()">{{lang.conf.lang.en}}</FormRadiobox>
-        <FormRadiobox class="value" name="lang" :checked="page.conf.lang===`jp`"
-          @change="generic([`conf`,`lang`,`jp`]),saveConf()">{{lang.conf.lang.jp}}</FormRadiobox>
+        <FormRadiobox class="value" name="lang" value="en" v-model="state.conf.lang">
+          {{lang.conf.lang.en}}</FormRadiobox>
+        <FormRadiobox class="value" name="lang" value="jp" v-model="state.conf.lang">
+          {{lang.conf.lang.jp}}</FormRadiobox>
       </li>
       <li class="item">
         <h3 class="title">{{lang.conf.backup.title}}</h3>
-        <a class="value" @click="downloadBackupConf({target:$event.currentTarget})">
+        <a class="value" @click="action.downloadBackupConf({target:$event.currentTarget})">
           <FormButton>{{lang.conf.backup.download}}</FormButton>
         </a>
         <label class="value">
-          <input type="file" @change="uploadBackupConf({file:$event.currentTarget.files[0]})">
+          <input type="file"
+            @change="action.uploadBackupConf({file:$event.currentTarget.files[0]})">
           <span class="button warn">{{lang.conf.backup.upload}}</span>
         </label>
       </li>
       <li class="item">
         <h3 class="title">{{lang.conf.reset.title}}</h3>
-        <FormButton @click="resetConfConf()">{{lang.conf.reset.conf}}</FormButton>
-        <FormButton class="warn" @click="resetListConf()">{{lang.conf.reset.list}}</FormButton>
+        <FormButton @click="action.resetConfConf()">{{lang.conf.reset.conf}}</FormButton>
+        <FormButton class="warn"
+          @click="action.resetListConf()">{{lang.conf.reset.list}}</FormButton>
       </li>
     </ul>
   </div>

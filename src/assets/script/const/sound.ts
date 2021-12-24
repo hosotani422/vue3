@@ -38,6 +38,8 @@ class Sound {
   }
 }
 
-export const ok = new Sound(OkSound);
-export const cancel = new Sound(CancelSound);
-export const warn = new Sound(WarnSound);
+export default {
+  ok: new Sound(OkSound),
+  cancel: new Sound(CancelSound),
+  warn: new Sound(WarnSound),
+};

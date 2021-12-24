@@ -1,107 +1,66 @@
 <script lang='ts'>
 import * as Vue from 'vue';
-import * as Vuex from 'vuex';
+import * as VueRouter from 'vue-router';
 import * as Lang from '@/assets/script/lang/lang';
+import * as page from '@/composition/pages/page';
 export default Vue.defineComponent({
-  computed: {
-    ...Vuex.mapState([
-      `route`,
-    ]),
-    ...Vuex.mapState(`pages`, [
-      `page`,
-    ]),
-    ...Vuex.mapGetters(`pages/page`, [
-      `classTaskSub`,
-      `classFootSub`,
-      `textMemoSub`,
-      `textAlarmSub`,
-    ]),
-    listId() {
-      return this.page.listId;
-    },
-    mainId() {
-      return this.route.params.mainId;
-    },
-    main() {
-      return this.page.list.data[this.listId].data[this.mainId];
-    },
-    lang() {
-      return Lang[this.page.conf.lang as `jp` | `en`];
-    },
-  },
-  methods: {
-    ...Vuex.mapActions(`pages/page`, [
-      `saveList`,
-      `routerBack`,
-      `inputItemSub`,
-      `checkItemSub`,
-      `enterItemSub`,
-      `backItemSub`,
-      `deleteItemSub`,
-      `inputMemoSub`,
-      `switchItemSub`,
-      `dragInitSub`,
-      `dragStartSub`,
-      `dragMoveSub`,
-      `dragEndSub`,
-      `swipeInitSub`,
-      `swipeStartSub`,
-      `swipeMoveSub`,
-      `swipeEndSub`,
-      `openDateSub`,
-      `openTimeSub`,
-      `openAlarmSub`,
-    ]),
-    ...Vuex.mapMutations(`pages/page`, [
-      `generic`,
-    ]),
+  setup: () => {
+    const route = VueRouter.useRoute();
+    return {
+      ...page,
+      listId: Vue.computed(() => page.state.listId),
+      mainId: Vue.computed(() => route.params.mainId),
+      main: Vue.computed(() =>
+        page.state.list.data[page.state.listId].data[route.params.mainId as string]),
+      lang: Vue.computed(() => Lang[page.state.conf.lang as `jp` | `en`]),
+    };
   },
 });
 </script>
 
 <template lang='html'>
 <div class="page-sub"
-  @touchstart.self="swipeInitSub({target:$event.currentTarget,
+  @touchstart.self="action.swipeInitSub({target:$event.currentTarget,
     x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})"
-  @touchmove="dragStartSub({$event}),
-    dragMoveSub({y:$event.changedTouches[0].clientY,$event}),
-    swipeStartSub({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY}),
-    swipeMoveSub({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})"
-  @touchend="dragEndSub(),swipeEndSub({x:$event.changedTouches[0].clientX})">
+  @touchmove="action.dragStartSub({$event}),
+    action.dragMoveSub({y:$event.changedTouches[0].clientY,$event}),
+    action.swipeStartSub({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY}),
+    action.swipeMoveSub({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})"
+  @touchend="action.dragEndSub(),action.swipeEndSub({x:$event.changedTouches[0].clientX})">
   <div class="home">
     <h3 class="head">
-      <svg class="right" @click="routerBack()">
+      <svg class="right" @click="action.routerBack()">
         <use href="@/assets/image/icon.svg#right"/>
       </svg>
-      <FormTextbox class="title" :placeholder="lang.page.main" :value="main.title"
-        @input="generic([`list`,`data`,listId,`data`,mainId,`title`,
-        $event.target.value]),saveList()"/>
-      <svg class="mode" @click="switchItemSub()">
+      <FormTextbox class="title" :placeholder="lang.page.main" v-model="main.title"/>
+      <svg class="mode" @click="action.switchItemSub()">
         <use href="@/assets/image/icon.svg#mode"/>
       </svg>
     </h3>
     <div class="body">
       <transition name="fade" mode="out-in">
         <FormTextarea class="memo" v-if="!main.task"
-          :placeholder="lang.page.memo" :value="textMemoSub()"
-          @input="inputMemoSub({value:$event.target.value})"></FormTextarea>
+          :placeholder="lang.page.memo" :modelValue="getter.textMemoSub.value()"
+          @input="action.inputMemoSub({value:$event.target.value})"></FormTextarea>
         <transition-group tag="ul" class="task" name="slide" v-else>
-          <li class="item-sub" :class="[classTaskSub(subId)]"
+          <li class="item-sub" :class="[getter.classTaskSub.value(subId)]"
             :data-id="subId" :key="`list${listId}main${mainId}sub${subId}`"
             v-for="(subId,index) of main.sort">
-            <FormCheckbox class="check" :checked="main.data[subId].check"
-              @change="checkItemSub({subId,checked:$event.target.checked})"></FormCheckbox>
+            <FormCheckbox class="check" :modelValue="main.data[subId].check"
+              @change="action.checkItemSub({subId,checked:$event.target.checked})"></FormCheckbox>
             <FormTextarea class="title" :placeholder="lang.page.sub"
-              :value="main.data[subId].title"
-              @keydown.backspace="backItemSub({
+              :modelValue="main.data[subId].title"
+              @keydown.backspace="action.backItemSub({
                 subId,index,caret:$event.target.selectionStart,$event})"
-              @keydown.enter.prevent="enterItemSub({
+              @keydown.enter.prevent="action.enterItemSub({
                 subId,value:$event.target.value,caret:$event.target.selectionStart})"
-              @input="inputItemSub({subId,value:$event.target.value})" v-height/>
-            <svg class="move" @touchstart="dragInitSub({subId,y:$event.changedTouches[0].clientY})">
+              @input="action.inputItemSub({subId,value:$event.target.value})" v-height/>
+            <svg class="move"
+              @touchstart="action.dragInitSub({subId,y:$event.changedTouches[0].clientY})">
               <use href="@/assets/image/icon.svg#drag"/>
             </svg>
-            <svg class="trash" @touchstart="deleteItemSub({subId})" v-if="main.sort.length>1">
+            <svg class="trash" v-if="main.sort.length>1"
+              @touchstart="action.deleteItemSub({subId})">
               <use href="@/assets/image/icon.svg#trash"/>
             </svg>
           </li>
@@ -109,12 +68,15 @@ export default Vue.defineComponent({
       </transition>
     </div>
     <div class="foot">
-      <FormTextbox class="date" :class="classFootSub()" :placeholder="lang.page.date" readonly
-        :value="main.date" @focus="openDateSub({date:main.date})"/>
-      <FormTextbox class="time" :class="classFootSub()" :placeholder="lang.page.time" readonly
-        :value="main.time" @focus="openTimeSub({time:main.time})"/>
-      <FormTextbox class="alarm" :class="classFootSub()" :placeholder="lang.page.alarm" readonly
-        :value="textAlarmSub()" @focus="openAlarmSub()"/>
+      <FormTextbox class="date" :class="getter.classFootSub.value()"
+        :placeholder="lang.page.date" readonly :modelValue="main.date"
+        @focus="action.openCalendarSub({date:main.date})"/>
+      <FormTextbox class="time" :class="getter.classFootSub.value()"
+        :placeholder="lang.page.time" readonly :modelValue="main.time"
+        @focus="action.openClockSub({time:main.time})"/>
+      <FormTextbox class="alarm" :class="getter.classFootSub.value()"
+        :placeholder="lang.page.alarm" readonly :modelValue="getter.textAlarmSub.value()"
+        @focus="action.openAlarmSub()"/>
     </div>
   </div>
 </div>

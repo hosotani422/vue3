@@ -2,12 +2,19 @@
 import * as Vue from 'vue';
 export default Vue.defineComponent({
   inheritAttrs: false,
+  props: {
+    modelValue: {
+      type: [String, Boolean],
+    },
+  },
+  emits: [`update:modelValue`],
 });
 </script>
 
 <template lang='html'>
 <label class="form-radio" :class="$attrs.class">
-  <input type="radio" v-bind="$attrs">
+  <input type="radio" v-bind="$attrs" :checked="modelValue===$attrs.value"
+    @change="$emit(`update:modelValue`, $event.target.value)">
   <span><slot></slot></span>
 </label>
 </template>

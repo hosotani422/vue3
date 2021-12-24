@@ -1,6 +1,8 @@
-export const listId = `1` as const;
+import * as page from '@/composition/pages/page';
 
-export const list = {
+export const listId = `1`;
+
+export const list: typeof page.state.list = {
   sort: [`1`, `2`],
   data: {
     "1": {
@@ -16,13 +18,13 @@ export const list = {
       data: {},
     },
   },
-} as const;
+};
 
-export const conf = {
+export const conf: typeof page.state.conf = {
   size: `2`,
   speed: `2`,
   volume: `2`,
   vibrate: true,
   theme: `light`,
   lang: `jp`,
-} as const;
+};
