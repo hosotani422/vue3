@@ -1,46 +1,32 @@
 <script lang='ts'>
 import * as Vue from 'vue';
-import * as Vuex from 'vuex';
+import * as clock from '@/composition/popup/clock';
 export default Vue.defineComponent({
-  computed: {
-    ...Vuex.mapState(`popup`, [
-      `time`,
-    ]),
-  },
-  methods: {
-    ...Vuex.mapActions(`pages/page`, [
-      `routerBack`,
-    ]),
-    ...Vuex.mapActions(`popup/time`, [
-      `close`,
-      `inputHour`,
-      `inputMinute`,
-    ]),
-  },
+  setup: () => clock,
 });
 </script>
 
 <template lang='html'>
 <transition name="fade">
-  <div class="popup-time" v-if="time.open">
+  <div class="popup-clock" v-if="state.open">
     <div class="home">
       <div class="body">
         <canvas class="item-hour"
-          @touchstart="inputHour({target:$event.target,
+          @touchstart="action.inputHour({target:$event.target,
             x:$event.touches[0].pageX,y:$event.touches[0].pageY})"
-          @touchmove="inputHour({target:$event.target,
+          @touchmove="action.inputHour({target:$event.target,
             x:$event.touches[0].pageX,y:$event.touches[0].pageY})"></canvas>
         <canvas class="item-minute"
-          @touchstart="inputMinute({target:$event.target,
+          @touchstart="action.inputMinute({target:$event.target,
             x:$event.touches[0].pageX,y:$event.touches[0].pageY})"
-          @touchmove="inputMinute({target:$event.target,
+          @touchmove="action.inputMinute({target:$event.target,
             x:$event.touches[0].pageX,y:$event.touches[0].pageY})"></canvas>
       </div>
       <div class="foot">
-        <FormButton class="cancel" @click="close()">{{time.cancel}}</FormButton>
-        <FormButton class="clear" @click="time.callback(``,``)">{{time.clear}}</FormButton>
-        <FormButton class="ok" @click="time.callback(time.hour,time.minute)">
-          {{time.ok}}</FormButton>
+        <FormButton class="cancel" @click="action.close()">{{state.cancel}}</FormButton>
+        <FormButton class="clear" @click="state.callback(``,``)">{{state.clear}}</FormButton>
+        <FormButton class="ok" @click="state.callback(state.hour,state.minute)">
+          {{state.ok}}</FormButton>
       </div>
     </div>
   </div>
@@ -48,7 +34,7 @@ export default Vue.defineComponent({
 </template>
 
 <style lang='scss' scoped>
-.popup-time {
+.popup-clock {
   @include flex(flex, row, center, center);
   @include position(absolute, zindex(picker), 0, 0, 0, 0);
   @include box(null, null, 2rem 2.5rem);

@@ -1,19 +1,18 @@
 <script lang='ts'>
 import * as Vue from 'vue';
-import * as Vuex from 'vuex';
 import * as Cordova from '@/assets/script/cordova/cordova';
-import PageMain from '@/views/main.vue';
-import PopupDate from '@/components/popup/popup-date.vue';
+import PopupCalendar from '@/components/popup/popup-calendar.vue';
 import PopupDialog from '@/components/popup/popup-dialog.vue';
 import PopupNotice from '@/components/popup/popup-notice.vue';
-import PopupTime from '@/components/popup/popup-time.vue';
+import PopupClock from '@/components/popup/popup-clock.vue';
+import * as page from '@/composition/pages/page';
 export default Vue.defineComponent({
+  setup: () => page,
   components: {
-    PageMain,
-    PopupDate,
+    PopupCalendar,
     PopupDialog,
     PopupNotice,
-    PopupTime,
+    PopupClock,
   },
   computed: {
     mode() {
@@ -27,18 +26,10 @@ export default Vue.defineComponent({
       }
       return `large`;
     },
-    ...Vuex.mapState(`pages`, [
-      `page`,
-    ]),
-  },
-  methods: {
-    ...Vuex.mapActions(`pages/page`, [
-      `init`,
-    ]),
   },
   beforeMount() {
     Cordova.Admob.mountBanner();
-    this.init();
+    page.action.init();
   },
   mounted() {
     Cordova.Splash.hideMount();
@@ -47,7 +38,7 @@ export default Vue.defineComponent({
 </script>
 
 <template lang='html'>
-<div class="app" :class="`size${page.conf.size} speed${page.conf.speed} ${page.conf.theme}`">
+<div class="app" :class="`size${state.conf.size} speed${state.conf.speed} ${state.conf.theme}`">
   <div class="body">
     <router-view name="main"></router-view>
     <router-view name="sub" v-slot="{Component}">
@@ -55,10 +46,10 @@ export default Vue.defineComponent({
         <component :is="Component"/>
       </transition>
     </router-view>
-    <PopupDate></PopupDate>
+    <PopupCalendar></PopupCalendar>
     <PopupDialog></PopupDialog>
     <PopupNotice></PopupNotice>
-    <PopupTime></PopupTime>
+    <PopupClock></PopupClock>
   </div>
   <div class="foot" :class="classFoot" v-if="mode===`app`"></div>
 </div>

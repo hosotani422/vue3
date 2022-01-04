@@ -2,7 +2,7 @@ export const common = {
   cancel: `Cancel`,
   clear: `Clear`,
   ok: `OK`,
-} as const;
+};
 
 export const page = {
   list: `list`,
@@ -12,7 +12,7 @@ export const page = {
   date: `date`,
   time: `time`,
   alarm: `alarm`,
-} as const;
+};
 
 export const dialog = {
   selectAll: `Select all`,
@@ -42,16 +42,16 @@ export const dialog = {
       "12": {label: `2 day ago`, value: 2880},
     },
   },
-} as const;
+};
 
 export const date = {
   week: [`Sun`, `Mon`, `Tue`, `Wed`, `Thu`, `Fri`, `Sat`],
-} as const;
+};
 
 export const notice = {
   message: `The deletion is complete`,
   button: `Restore`,
-} as const;
+};
 
 export const conf = {
   title: `Configuration`,
@@ -108,8 +108,8 @@ export const conf = {
   about: {
     title: `Overview`,
   },
-} as const;
+};
 
 export const alarm = {
   title: `Memotea Alarm`,
-} as const;
+};

@@ -1,79 +1,51 @@
 <script lang='ts'>
 import * as Vue from 'vue';
-import * as Vuex from 'vuex';
+import * as page from '@/composition/pages/page';
 export default Vue.defineComponent({
-  computed: {
-    ...Vuex.mapState([
-      `route`,
-    ]),
-    ...Vuex.mapState(`pages`, [
-      `page`,
-    ]),
-    ...Vuex.mapGetters(`pages/page`, [
-      `classItemList`,
-      `textCountList`,
-    ]),
-  },
-  methods: {
-    ...Vuex.mapActions(`pages/page`, [
-      `routerMain`,
-      `routerBack`,
-      `insertItemList`,
-      `copyItemList`,
-      `deleteItemList`,
-      `switchEditList`,
-      `dragInitList`,
-      `dragStartList`,
-      `dragMoveList`,
-      `dragEndList`,
-      `swipeInitList`,
-      `swipeStartList`,
-      `swipeMoveList`,
-      `swipeEndList`,
-    ]),
-  },
+  setup: () => page,
 });
 </script>
 
 <template lang='html'>
-<div class="page-list" @click="switchEditList()"
-  @touchstart.self="swipeInitList({target:$event.currentTarget,
+<div class="page-list" @click="action.switchEditList()"
+  @touchstart.self="action.swipeInitList({target:$event.currentTarget,
     x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})"
-  @touchmove="dragStartList({$event}),
-    dragMoveList({y:$event.changedTouches[0].clientY,$event}),
-    swipeStartList({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY}),
-    swipeMoveList({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})"
-  @touchend="dragEndList(),swipeEndList({x:$event.changedTouches[0].clientX})">
+  @touchmove="action.dragStartList({$event}),
+    action.dragMoveList({y:$event.changedTouches[0].clientY,$event}),
+    action.swipeStartList({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY}),
+    action.swipeMoveList({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})"
+  @touchend="action.dragEndList(),action.swipeEndList({x:$event.changedTouches[0].clientX})">
   <div class="home">
     <div class="head">
-      <svg class="plus" @click="insertItemList()">
+      <svg class="plus" @click="action.insertItemList()">
         <use href="@/assets/image/icon.svg#plus"/>
       </svg>
       <h1 class="title">Memotea</h1>
-      <svg class="left" @click="routerBack()">
+      <svg class="left" @click="action.routerBack()">
         <use href="@/assets/image/icon.svg#left"/>
       </svg>
     </div>
     <div class="body">
       <transition-group class="wrap" tag="ul" name="slide">
-        <li class="item-list" :class="[classItemList(listId)]"
-          :data-id="listId" :key="`list${listId}`" v-for="listId of page.list.sort"
-          @lngclick="switchEditList({listId}),dragInitList({listId,y:$event.detail.clientY})"
-          @click="page.list.data[listId].status!==`edit`&&routerMain({listId})"
+        <li class="item-list" :class="[getter.classItemList.value(listId)]"
+          :data-id="listId" :key="`list${listId}`" v-for="listId of state.list.sort"
+          @lngclick="action.switchEditList({listId}),
+          action.dragInitList({listId,y:$event.detail.clientY})"
+          @click="state.list.data[listId].status!==`edit`&&action.routerMain({listId})"
           @contextmenu.prevent>
           <svg class="icon">
             <use href="@/assets/image/icon.svg#inbox" v-if="listId===`1`"/>
             <use href="@/assets/image/icon.svg#trash" v-else-if="listId===`2`"/>
             <use href="@/assets/image/icon.svg#list" v-else/>
           </svg>
-          <p class="title">{{page.list.data[listId].title}}</p>
-          <div class="count">{{textCountList(listId)}}</div>
+          <p class="title">{{state.list.data[listId].title}}</p>
+          <div class="count">{{getter.textCountList.value(listId)}}</div>
           <svg class="clone" v-if="listId!==`1`&&listId!==`2`"
-            @click="copyItemList({$event,listId})">
+            @click="action.copyItemList({$event,listId})">
             <use class="clone" href="@/assets/image/icon.svg#clone"/>
           </svg>
-          <svg class="trash" v-if="listId!==`1`&&listId!==`2`&&listId!==page.listId"
-            @click="deleteItemList({$event,listId})">
+          <svg class="trash" v-if="listId!==`1`&&listId!==`2`&&listId!==state.listId"
+            @click="action.deleteItemList({$event,listId})">
             <use class="trash" href="@/assets/image/icon.svg#trash"/>
           </svg>
         </li>

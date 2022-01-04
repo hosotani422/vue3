@@ -1,66 +1,48 @@
 <script lang='ts'>
 import * as Vue from 'vue';
-import * as Vuex from 'vuex';
+import * as calendar from '@/composition/popup/calendar';
 export default Vue.defineComponent({
-  computed: {
-    ...Vuex.mapState(`popup`, [
-      `date`,
-    ]),
-    ...Vuex.mapGetters(`popup/date`, [
-      `labelWeek`,
-      `labelDay`,
-    ]),
-  },
-  methods: {
-    ...Vuex.mapActions(`pages/page`, [
-      `routerBack`,
-    ]),
-    ...Vuex.mapActions(`popup/date`, [
-      `close`,
-      `pageMove`,
-      `swipeInit`,
-      `swipeStart`,
-      `swipeMove`,
-      `swipeEnd`,
-    ]),
-  },
+  setup: () => calendar,
 });
 </script>
 
 <template lang='html'>
 <transition name="fade">
-  <div class="popup-date" v-if="date.open"
-    @touchmove="swipeStart({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY}),
-      swipeMove({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})"
-    @touchend="swipeEnd({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})">
+  <div class="popup-calendar" v-if="state.open"
+    @touchmove="action.swipeStart({
+      x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY}),
+      action.swipeMove({x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})"
+    @touchend="action.swipeEnd({
+      x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})">
     <div class="home">
       <div class="head">
         <div class="month">
-          <svg class="prev" @click="pageMove({prev:true})">
+          <svg class="prev" @click="action.pageMove({prev:true})">
             <use href="@/assets/image/icon.svg#prev"/>
           </svg>
-          <h4 class="title">{{date.current}}</h4>
-          <svg class="next" @click="pageMove({prev:false})">
+          <h4 class="title">{{state.current}}</h4>
+          <svg class="next" @click="action.pageMove({prev:false})">
             <use href="@/assets/image/icon.svg#next"/>
           </svg>
         </div>
         <ul class="week">
-          <li class="item" :key="`week${week}`" v-for="week of labelWeek()">{{week}}</li>
+          <li class="item" :key="`week${week}`"
+            v-for="week of getter.labelWeek.value()">{{week}}</li>
         </ul>
       </div>
       <div class="body">
-        <div class="area" @touchstart="swipeInit({target:$event.currentTarget,
+        <div class="area" @touchstart="action.swipeInit({target:$event.currentTarget,
           x:$event.changedTouches[0].clientX,y:$event.changedTouches[0].clientY})">
-          <ul class="month" :key="`month${month.id}`" v-for="month of labelDay()">
+          <ul class="month" :key="`month${month.id}`" v-for="month of getter.labelDay.value()">
             <li class="day" :class="{select:day.select,today:day.today,hide:day.hide}"
               :key="`day${month.id}${day.id}`" v-for="day of month.day"
-              @click="date.callback(day.id)">{{day.text}}</li>
+              @click="state.callback(day.id)">{{day.text}}</li>
           </ul>
         </div>
       </div>
       <div class="foot">
-        <FormButton class="cancel" @click="close()">{{date.cancel}}</FormButton>
-        <FormButton class="clear" @click="date.callback(``)">{{date.clear}}</FormButton>
+        <FormButton class="cancel" @click="action.close()">{{state.cancel}}</FormButton>
+        <FormButton class="clear" @click="state.callback(``)">{{state.clear}}</FormButton>
       </div>
     </div>
   </div>
@@ -68,7 +50,7 @@ export default Vue.defineComponent({
 </template>
 
 <style lang='scss' scoped>
-.popup-date {
+.popup-calendar {
   @include flex(flex, row, center);
   @include position(absolute, zindex(picker), 0, 0, 0, 0);
   @include box(null, null, 2rem 2.5rem);

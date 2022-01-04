@@ -1,4 +1,9 @@
 module.exports = {
+  pages: {
+    index: {
+      entry: `src/index.ts`,
+    },
+  },
   css: {
     loaderOptions: {
       scss: {
@@ -6,4 +11,5 @@ module.exports = {
       },
     },
   },
+  outputDir: `.bundle`,
 };

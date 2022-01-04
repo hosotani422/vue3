@@ -1,16 +1,10 @@
 const gulp = require(`gulp`);
 const path = require(`path`);
-const replace = require(`gulp-replace`);
 const exec = require(`child_process`).execSync;
 
-const bundle = () => {
-  const cmd = [];
-  cmd.push(`npm run generate${process.env.npm_lifecycle_event}`);
-  exec(cmd.join(` && `));
-  return gulp
-    .src([`${path.resolve(__dirname, `.bundle/**/*`)}`])
-    .pipe(replace(`/nuxt/`, `nuxt/`))
-    .pipe(gulp.dest(`${path.resolve(__dirname, `.bundle/`)}`));
+const bundle = (done) => {
+  exec(`npm run build`);
+  done();
 };
 
 const create = (done) => {

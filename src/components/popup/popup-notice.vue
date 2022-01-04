@@ -1,20 +1,16 @@
 <script lang='ts'>
 import * as Vue from 'vue';
-import * as Vuex from 'vuex';
+import * as notice from '@/composition/popup/notice';
 export default Vue.defineComponent({
-  computed: {
-    ...Vuex.mapState(`popup`, [
-      `notice`,
-    ]),
-  },
+  setup: () => notice,
 });
 </script>
 
 <template lang='html'>
 <transition name="move">
-  <div class="popup-notice" v-if="notice.open">
-    <p class="message">{{notice.message}}</p>
-    <FormButton class="button" @click="notice.callback()">{{notice.button}}</FormButton>
+  <div class="popup-notice" v-if="state.open">
+    <p class="message">{{state.message}}</p>
+    <FormButton class="button" @click="state.callback()">{{state.button}}</FormButton>
   </div>
 </transition>
 </template>

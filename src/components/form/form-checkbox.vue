@@ -2,12 +2,20 @@
 import * as Vue from 'vue';
 export default Vue.defineComponent({
   inheritAttrs: false,
+  props: {
+    modelValue: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  emits: [`update:modelValue`],
 });
 </script>
 
 <template lang='html'>
 <label class="form-checkbox" :class="$attrs.class">
-  <input type="checkbox" v-bind="$attrs"/>
+  <input type="checkbox" v-bind="$attrs" :checked="modelValue"
+    @change="$emit(`update:modelValue`, $event.target.checked)"/>
   <span><slot></slot></span>
 </label>
 </template>

@@ -1534,7 +1534,7 @@ module.exports = {
       // ⇒ constructors: クラスコンストラクタ
       // ⇒ asyncFunctions: 非同期関数
       // ⇒ asyncMethods: オブジェクトリテラルの非同期クラスメソッドとメソッド
-      '@typescript-eslint/no-empty-function': [`error`],
+      '@typescript-eslint/no-empty-function': [`off`],
       // 不要な括弧を許可しない
       // [recommend: ×, fix: ●, require: ×, relation: eslint/no-extra-parens]
       // ※ 複雑な式を括弧で囲むと意図が明確になり解読しやすくなる(no-mixed-operators)
