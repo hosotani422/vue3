@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve --mode web",
+    "buildweb": "vue-cli-service build --mode web",
+    "buildapp": "vue-cli-service build --mode app",
     "lint": "vue-cli-service lint",
     "app": "gulp --app",
     "web": "gulp --web"
