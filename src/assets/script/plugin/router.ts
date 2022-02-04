@@ -6,7 +6,7 @@ import PageConf from '@/views/page-conf.vue';
 import * as page from '@/composition/pages/page';
 
 const router = VueRouter.createRouter({
-  history: VueRouter.createWebHistory(process.env.BASE_URL),
+  history: VueRouter.createWebHashHistory(process.env.BASE_URL),
   routes: [
     {
       path: `/:listId`,

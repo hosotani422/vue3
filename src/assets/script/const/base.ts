@@ -1,6 +1,6 @@
 export const title = `Memotea`;
 
-export const version = `3.0.1`;
+export const version = `3.0.4`;
 
 export const backup = `memotea.bak`;
 

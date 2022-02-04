@@ -1,4 +1,6 @@
 module.exports = {
+  publicPath: `./`,
+  outputDir: `.bundle`,
   pages: {
     index: {
       entry: `src/index.ts`,
@@ -11,5 +13,4 @@ module.exports = {
       },
     },
   },
-  outputDir: `.bundle`,
 };

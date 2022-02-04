@@ -3,7 +3,7 @@ const path = require(`path`);
 const exec = require(`child_process`).execSync;
 
 const bundle = (done) => {
-  exec(`npm run build`);
+  exec(`npm run build${process.env.npm_lifecycle_event}`);
   done();
 };
 

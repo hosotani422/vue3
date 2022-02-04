@@ -16,7 +16,7 @@ export default Vue.defineComponent({
   },
   computed: {
     mode() {
-      return process.env.mode;
+      return process.env.VUE_APP_MODE;
     },
     classFoot() {
       if (window.outerHeight <= 400) {

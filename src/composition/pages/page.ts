@@ -130,9 +130,9 @@ export const action = {
   init: (): void => {
     route = VueRouter.useRoute();
     router = VueRouter.useRouter();
-    action.loadConf();
-    action.loadList();
     action.loadRoute();
+    action.loadList();
+    action.loadConf();
     action.emptyTrash();
   },
   loadRoute: (): void => {
@@ -886,7 +886,7 @@ export const action = {
     const data = `${localStorage.getItem(`route`) || Const.Init.listId}\n` +
       `${localStorage.getItem(`list`) || JSON.stringify(Const.Init.list)}\n` +
       `${localStorage.getItem(`conf`) || JSON.stringify(Const.Init.conf)}`;
-    if (process.env.mode !== `app`) {
+    if (process.env.VUE_APP_MODE !== `app`) {
       payload.target.setAttribute(`download`, Const.Base.backup);
       payload.target.setAttribute(`href`, `data:text/plain,${encodeURIComponent(data)}`);
     } else {
