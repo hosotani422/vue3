@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="jp.memotea"
-  version="3.0.4" android-versionCode="300048"
+  version="3.0.5" android-versionCode="300058"
   xmlns="http://www.w3.org/ns/widgets"
   xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Memotea</name>
@@ -15,4 +15,7 @@
   <preference name="android-targetSdkVersion" value="31" />
   <preference name="AutoHideSplashScreen" value="false" />
   <preference name="ShowSplashScreenSpinner" value="false" />
+  <!-- <edit-config file="AndroidManifest.xml" target="/manifest/application/activity[@android:name='MainActivity']" mode="merge">
+    <activity android:exported="true"/>
+  </edit-config> -->
 </widget>

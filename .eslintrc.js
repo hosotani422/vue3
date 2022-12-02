@@ -701,9 +701,10 @@ module.exports = {
     // ignoreStrings: 二重引用符または単一引用符で囲まれた文字列を含む行を無視します
     // ignoreTemplateLiterals: テンプレートリテラルを含む行を無視します
     // ignoreRegExpLiterals: RegExpリテラルを含む行を無視します
-    'max-len': [`error`, {code: 100, tabWidth: 2, comments: 100,
-      ignoreComments: false, ignoreTrailingComments: false, ignoreUrls: false,
-      ignoreStrings: false, ignoreTemplateLiterals: false, ignoreRegExpLiterals: false}],
+    'max-len': [`off`],
+    // 'max-len': [`error`, {code: 120, tabWidth: 2, comments: 120,
+    //   ignoreComments: false, ignoreTrailingComments: false, ignoreUrls: false,
+    //   ignoreStrings: false, ignoreTemplateLiterals: false, ignoreRegExpLiterals: false}],
     // ファイルの最大行数を強制する [recommend: ×, fix: ×]
     // max: ファイルの最大行数を強制します
     // skipBlankLines: 空白のみで構成される行を無視します
@@ -1623,6 +1624,8 @@ module.exports = {
       // named: 名前付き関数式 [`always`, `never`, `ignore`]
       // asyncArrow: 非同期アロー関数式 [`always`, `never`, `ignore`]
       '@typescript-eslint/space-before-function-paren': [`error`, `never`],
+
+      'vue/script-setup-uses-vars': `error`,
     },
   }],
 };
