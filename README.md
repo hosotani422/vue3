@@ -15,7 +15,7 @@
 ## プラグイン
 VSCode上で以下のプラグインを追加
 * Japanese Language Pack for Visual Studio Code - 日本語パック
-* Vetur - vueエディター
+* Volar - vueエディター
 * EditorConfig for VS Code - コーディングスタイル適用
 * ESLint - javascriptリンター（typescript対応）
 * stylelint - stylesheetリンター（scss対応）

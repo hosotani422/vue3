@@ -26,16 +26,16 @@ const create = (done) => {
   cmd.push(`copy "${path.resolve(__dirname, `build/cordova/memotea.keystore`)}" ` +
     `"${path.resolve(__dirname, `.cordova/memotea.keystore`)}"`);
   [`hdpi`, `ldpi`, `mdpi`, `xhdpi`, `xxhdpi`, `xxxhdpi`].forEach((type) => {
-    cmd.push(`copy "${path.resolve(__dirname, `src/assets/image/logo.png`)}" ` +
+    cmd.push(`copy "${path.resolve(__dirname, `src/image/logo.png`)}" ` +
       `"${path.resolve(__dirname, `.cordova/platforms/android/app/src/main/res/` +
       `mipmap-${type}/ic_launcher.png`)}"`);
-    cmd.push(`copy "${path.resolve(__dirname, `src/assets/image/logo!.png`)}" ` +
+    cmd.push(`copy "${path.resolve(__dirname, `src/image/logo!.png`)}" ` +
       `"${path.resolve(__dirname, `.cordova/platforms/android/app/src/main/res/` +
       `mipmap-${type}-v26/ic_launcher_foreground.png`)}"`);
-    cmd.push(`copy "${path.resolve(__dirname, `src/assets/image/back.png`)}" ` +
+    cmd.push(`copy "${path.resolve(__dirname, `src/image/back.png`)}" ` +
       `"${path.resolve(__dirname, `.cordova/platforms/android/app/src/main/res/` +
       `mipmap-${type}-v26/ic_launcher_background.png`)}"`);
-    cmd.push(`copy "${path.resolve(__dirname, `src/assets/image/splash.png`)}" ` +
+    cmd.push(`copy "${path.resolve(__dirname, `src/image/splash.png`)}" ` +
       `"${path.resolve(__dirname, `.cordova/platforms/android/app/src/main/res/` +
       `drawable-port-${type}/screen.png`)}"`);
   });
