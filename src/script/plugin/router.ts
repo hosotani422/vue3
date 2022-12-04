@@ -1,51 +1,48 @@
 import * as VueRouter from 'vue-router';
-import PageMain from '@/view/page/PageMain.vue';
-import PageList from '@/view/page/PageList.vue';
-import PageSub from '@/view/page/PageSub.vue';
-import PageConf from '@/view/page/PageConf.vue';
-import * as root from '@/status/page/root';
+import PageList from '@/components/page/PageList.vue';
+import PageMain from '@/components/page/PageMain.vue';
+import PageSub from '@/components/page/PageSub.vue';
+import PageConf from '@/components/page/PageConf.vue';
+import * as root from '@/composables/page/root';
 
 const router = VueRouter.createRouter({
-  history: VueRouter.createWebHashHistory(process.env.BASE_URL),
+  history: VueRouter.createWebHashHistory(),
   routes: [
     {
       path: `/:listId`,
-      components: {
-        main: PageMain,
-      },
-    },
-    {
-      path: `/:listId/list`,
-      components: {
-        main: PageMain,
-        sub: PageList,
-      },
-    },
-    {
-      path: `/:listId/sub/:mainId`,
-      components: {
-        main: PageMain,
-        sub: PageSub,
-      },
-    },
-    {
-      path: `/:listId/conf`,
-      components: {
-        main: PageMain,
-        sub: PageConf,
-      },
+      component: PageMain,
+      children: [
+        {
+          path: `list`,
+          component: PageList,
+        }, {
+          path: `sub/:mainId`,
+          component: PageSub,
+        }, {
+          path: `conf`,
+          component: PageConf,
+        },
+      ],
     },
   ],
 });
 
-router.beforeEach((_to: any, _from: any, _next: any) => {
-  const paramId = _to.params?.listId;
-  const stateId = root.state.listId;
-  _next(paramId && stateId && paramId !== stateId ? (() => {
-    const path = _to.path.split(`/`);
-    path.splice(1, 1, stateId);
-    return {path: path.join(`/`), replace: true};
-  })() : true);
+/**
+ * メイン画面遷移（ヒストリーバック）時に強制的に変数値を適用
+ * ※ パラメータ値を変数値に書き換える
+ */
+router.beforeEach((_to: VueRouter.RouteLocationNormalized,
+  _from: VueRouter.RouteLocationNormalized, _next: VueRouter.NavigationGuardNext) => {
+  if (!_to.params.listId && _from.params.listId && root.state.back) {
+    _next((() => {
+      const path = _to.path.split(`/`);
+      path.splice(1, 1, root.state.listId);
+      root.state.back = false;
+      return {path: path.join(`/`), replace: true};
+    })());
+  } else {
+    _next(true);
+  }
 });
 
 export default router;
