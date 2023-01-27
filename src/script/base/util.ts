@@ -1,18 +1,15 @@
 /**
- * ディープコピー
- * @param item コピー元
- * @returns コピー先
- */
-export const copy = <T>(item: T): T => JSON.parse(JSON.stringify(item));
-
-/**
  * JSON判定
- * @param item 判定対象
+ * @param item 対象値
  * @returns 判定結果
  */
-export const isJson = (item: string): boolean => {
+export const isJson = (item: unknown): boolean => {
   try {
-    JSON.parse(item);
+    if (typeof item === `string`) {
+      JSON.parse(item);
+    } else {
+      return false;
+    }
   } catch {
     return false;
   }
@@ -20,7 +17,7 @@ export const isJson = (item: string): boolean => {
 };
 
 /**
- * タプル型生成
+ * タプル値生成
  * @param param パラメータ
  * @returns タプル値
  */

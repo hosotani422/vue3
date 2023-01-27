@@ -1,39 +1,20 @@
 # Memotea
 
 ## インストール
-* Node.js - 16系の最新バージョン
+* Node.js - 18系の最新バージョン（.nvmrcファイルに記載）
 * VSCode - 各OSの最新バージョン
 <br><br>
 
-## Nodistを使用する場合
-* PowerShellに認識
-1. PowerShellを右クリックして「管理者として実行」をクリック
-2. 「Set-ExecutionPolicy RemoteSigned」コマンドを実行して「Y」を選択
-* nodeとnpmを同期
-1. 「nodist npm match」コマンドを実行
+## Nodeバージョン管理を使用する場合
+* windowsの場合fnmがお勧め（.nvmrcファイルに対応）
 
 ## プラグイン
-VSCode上で以下のプラグインを追加
-* Japanese Language Pack for Visual Studio Code - 日本語パック
-* Volar - vueエディター
-* EditorConfig for VS Code - コーディングスタイル適用
-* ESLint - javascriptリンター（typescript対応）
-* stylelint - stylesheetリンター（scss対応）
+1. VSCodeの拡張機能の検索で「@recommended」と入力
+2. お勧めの拡張機能が表示されるので必要なものをインストール
 <br><br>
 
 ## 設定
-VSCode上で設定を追加
-1. メニューから以下の順に選択<br>
-ファイル ⇒ ユーザー設定 ⇒ 設定
-2. 右上のアイコン（設定(JSON)を開く）をクリック
-3. settings.jsonに以下を追記
-```
-"editor.codeActionsOnSave": {
-  "source.fixAll.eslint": true,
-  "source.fixAll.stylelint": true,
-}
-```
-※ テキスト保存時に自動で整形が行われるようになる
+* .vscode/settings.jsonファイルが自動で反映（何もしなくて良い）
 <br><br>
 
 ## Cordova
@@ -72,13 +53,13 @@ VSCode上で設定を追加
 
 ## パッケージ
 ```
-npm install
+npm i
 ```
 
 ## ビルド
 ### 開発環境構築
 ```
-npm run serve
+npm run dev
 ```
 ### 本番資材生成
 ```

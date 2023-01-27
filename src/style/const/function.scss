@@ -6,7 +6,6 @@
     page: 10,
   ), $key);
 }
-
 @function gradient($color: #fff, $angle: 0deg, $rate: 0%) {
   @return linear-gradient($angle, $color, scale-color($color, $lightness: $rate));
 }

@@ -1,45 +1,19 @@
-import OkSound from '@/sound/ok.mp3';
-import CancelSound from '@/sound/cancel.mp3';
-import WarnSound from '@/sound/warn.mp3';
+import ok from '@/sound/ok.mp3';
+import cancel from '@/sound/cancel.mp3';
+import warn from '@/sound/warn.mp3';
 
-/**
- * 効果音クラス
- */
-class Sound {
-  /**
-   * コンストラクター
-   * @param src ファイルURL
-   */
-  public constructor(src: string,
-    private sound: HTMLAudioElement = new Audio()) {
-    this.sound.src = src;
-    this.sound.load();
+export default class Sound {
+  private static audio = {
+    ok: new Audio(ok),
+    cancel: new Audio(cancel),
+    warn: new Audio(warn),
+  };
+  public static play(type: keyof typeof Sound.audio): void {
+    this.audio[type].play();
   }
-  /**
-   * 再生実行
-   */
-  public play(): void {
-    this.sound.currentTime = 0;
-    this.sound.play();
-  }
-  /**
-   * ボリューム設定
-   * @param volume ボリューム
-   */
-  public set volume(volume: number) {
-    this.sound.volume = volume;
-  }
-  /**
-   * ボリューム取得
-   * @returns ボリューム
-   */
-  public get volume(): number {
-    return this.sound.volume;
+  public static volume(volume: number): void {
+    for (const audio of Object.values(this.audio)) {
+      audio.volume = volume;
+    }
   }
 }
-
-export default {
-  ok: new Sound(OkSound),
-  cancel: new Sound(CancelSound),
-  warn: new Sound(WarnSound),
-};

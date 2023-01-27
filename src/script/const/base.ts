@@ -11,3 +11,8 @@ export const duration = {
   "2": 150,
   "3": 75,
 };
+
+export const id = {
+  inbox: `list0000000000000`,
+  trash: `list9999999999999`,
+};

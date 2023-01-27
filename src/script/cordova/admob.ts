@@ -1,9 +1,9 @@
-import * as Const from '@/script/const/const';
+import constant from '@/script/const';
 
 // 基本設定
 const BaseConfig: BaseConfig = {
   // 広告ユニットID
-  id: Const.Base.admobId,
+  id: constant.base.admobId,
   // テスト広告
   isTesting: false,
   // ロード時に自動表示
