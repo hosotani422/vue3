@@ -1,6 +1,6 @@
 module.exports = {
   plugins: ['stylelint-scss'],
-  extends: [],
+  customSyntax: "postcss-html",
   rules: {
     /**
      * Possible Errors
