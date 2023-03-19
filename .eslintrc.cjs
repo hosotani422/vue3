@@ -430,7 +430,7 @@ module.exports = {
     // undefinedへの初期化を許可しない [recommend: ×, fix: ●]
     'no-undef-init': [`error`],
     // undefined変数の使用を許可しない [recommend: ×, fix: ×]
-    'no-undefined': [`error`],
+    'no-undefined': [`off`],
     // 未使用の変数を許可しない [recommend: ●, fix: ×]
     // vars: {all: すべての変数をチェック, local: ローカル変数のみチェック}
     // varsIgnorePattern: チェックしない変数を指定します

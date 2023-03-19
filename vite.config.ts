@@ -1,9 +1,23 @@
-import {defineConfig} from 'vite';
 import vue from '@vitejs/plugin-vue';
+import * as Vitest from 'vitest/config';
 import * as path from 'path';
 
-// https://vitejs.dev/config/
-export default defineConfig({
+export default Vitest.defineConfig(({mode}) => ({
+  define: {
+    vitest: undefined,
+    'import.meta.vitest': mode !== `production`,
+  },
+  test: {
+    globals: true,
+    environment: `happy-dom`,
+    includeSource: [`test/**/*.{ts, tsx}`],
+    reporters: [`default`, `html`],
+    outputFile: `./.html/index.html`,
+    coverage: {
+      provider: `c8`,
+      reportsDirectory: `./.coverage`,
+    },
+  },
   plugins: [vue()],
   css: {
     preprocessorOptions: {
@@ -20,4 +34,4 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-});
+}));

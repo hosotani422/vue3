@@ -271,7 +271,7 @@ export const action = {
     variable.drag.height = item.height;
     variable.drag.width = item.width;
     state.status[payload.subId] = `edit`;
-    conf.state.data.vibrate && navigator.vibrate(40);
+    conf.state.data.vibrate === `on` && navigator.vibrate(40);
   },
   dragStart: (payload: {event: TouchEvent;}): void => {
     if (variable.drag.status === `start`) {

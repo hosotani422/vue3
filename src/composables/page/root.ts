@@ -38,10 +38,7 @@ export const getter = Vue.reactive({
   mainId: Vue.computed(() => (): string =>
     (lib.route?.params.mainId && !Array.isArray(lib.route.params.mainId) ? lib.route.params.mainId : ``)),
   lang: Vue.computed(() => (): typeof lang[typeof conf.state.data.lang] => lang[conf.state.data.lang]),
-  classTop: Vue.computed(() => (): string[] => [
-    `speed${conf.state.data.speed}`,
-    conf.state.data.theme,
-  ]),
+  classTop: Vue.computed(() => (): string[] => [`speed${conf.state.data.speed}`, conf.state.data.theme]),
   classFoot: Vue.computed(() => (): string => {
     if (window.outerHeight <= 400) {
       return `small`;
